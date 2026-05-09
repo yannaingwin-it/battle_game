@@ -1,4 +1,8 @@
+from typing import Literal
+
 import pygame
+
+Variant = Literal["default", "outlined", "filled", "text"]
 
 
 class Button:
@@ -7,6 +11,7 @@ class Button:
 
     Attributes:
         text (str): button text.
+        variant (Variant): Literal["default", "outlined", "filled", "text"]
 
     Example:
         >>> initialize Button
@@ -27,6 +32,8 @@ class Button:
         color: str,
         hover_color: str,
         text_color="white",
+        radius=-1,
+        variant: Variant = "default",
     ):
         self.text = text
         self.rect = rect
@@ -35,26 +42,43 @@ class Button:
         self.font = font
         self.text_color = text_color
         self.clicked = False
+        self.radius = radius
+        self.variant = variant
 
     def draw(self, window: pygame.Surface, events: list[pygame.event.Event]):
         mouse_pos = pygame.mouse.get_pos()
         # Default color
         current_color = self.color
-
+        current_text_color = self.text_color
         # Change color on hover
         if self.rect.collidepoint(mouse_pos):
             current_color = self.hover_color
             for event in events:
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                     current_color = self.color
+                    current_text_color = "white"
 
         # Draw button body
-        pygame.draw.rect(window, current_color, self.rect)
-        # Draw button border (optional)
-        pygame.draw.rect(window, "black", self.rect, 2)
+        if self.variant == "default" or self.variant == "filled":
+            pygame.draw.rect(
+                window,
+                current_color,
+                self.rect,
+                border_radius=self.radius,
+            )
+        elif self.variant == "outlined":
+            pygame.draw.rect(
+                window,
+                current_color,
+                self.rect,
+                1,
+                border_radius=self.radius,
+            )
+        elif self.variant == "text":
+            pass
 
         # Render and center text
-        text_surf = self.font.render(self.text, True, self.text_color)
+        text_surf = self.font.render(self.text, True, current_text_color)
         text_rect = text_surf.get_rect(center=self.rect.center)
         window.blit(text_surf, text_rect)
         return self
@@ -69,7 +93,7 @@ class Button:
 
 
 ###################################################################
-
+### what should i write in there
 if __name__ == "__main__":
     pygame.init()
     # Main loop
@@ -84,6 +108,8 @@ if __name__ == "__main__":
         "black",
         "red",
         "lightblue",
+        radius=8,
+        variant="text",
     )
 
     clock = pygame.time.Clock()
