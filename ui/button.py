@@ -1,8 +1,9 @@
-from typing import Literal
-
 import pygame
 
-Variant = Literal["default", "outlined", "filled", "text"]
+try:
+    from .ui_type import Variant, ColorValue
+except ImportError:
+    from ui_type import Variant, ColorValue
 
 
 class Button:
@@ -29,9 +30,9 @@ class Button:
         text: str,
         rect: pygame.Rect,
         font: pygame.font.Font,
-        color: str,
-        hover_color: str,
-        text_color="white",
+        color: ColorValue,
+        hover_color: ColorValue,
+        text_color: ColorValue = "white",
         radius=-1,
         variant: Variant = "default",
     ):
@@ -93,8 +94,9 @@ class Button:
 
 
 ###################################################################
-### what should i write in there
-if __name__ == "__main__":
+
+
+def _demo():
     pygame.init()
     # Main loop
     running = True
@@ -109,7 +111,7 @@ if __name__ == "__main__":
         "red",
         "lightblue",
         radius=8,
-        variant="text",
+        variant="outlined",
     )
 
     clock = pygame.time.Clock()
@@ -132,3 +134,8 @@ if __name__ == "__main__":
         pygame.display.update()
 
     pygame.quit()
+
+
+### what should i write in there
+if __name__ == "__main__":
+    _demo()

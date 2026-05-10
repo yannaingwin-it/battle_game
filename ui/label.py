@@ -1,5 +1,3 @@
-from typing import Any
-
 import pygame
 
 
@@ -54,7 +52,8 @@ class Label:
 
 ###################################################################
 
-if __name__ == "__main__":
+
+def _demo():
     pygame.init()
     # Main loop
     running = True
@@ -86,3 +85,7 @@ if __name__ == "__main__":
         pygame.display.update()
 
     pygame.quit()
+
+
+if __name__ == "__main__":
+    _demo()

@@ -1,5 +1,10 @@
 import pygame
 
+try:
+    from .ui_type import ColorValue
+except ImportError:
+    from ui_type import ColorValue
+
 
 class InputBox:
     """
@@ -27,9 +32,10 @@ class InputBox:
         text: str,
         rect: pygame.Rect,
         font: pygame.font.Font,
-        textColor: str,
-        color: str,
-        activeColor: str,
+        textColor: ColorValue,
+        color: ColorValue,
+        activeColor: ColorValue,
+        radius=-1,
     ):
 
         self.text = text
@@ -40,6 +46,7 @@ class InputBox:
         self.activeColor = activeColor
         self.__cursor_visible = True
         self.__last_blink = pygame.time.get_ticks()
+        self.radius = radius
         pass
 
     def onchange(self, events: list[pygame.event.Event]):
@@ -71,13 +78,13 @@ class InputBox:
                 if event.key == pygame.K_BACKSPACE:
                     self.text = self.text[:-1]  # Remove last char
 
-                elif event.key == pygame.K_RETURN:
-                    print("Final Input self.text :", self.text)
-                    self.text = ""  # Clear after enter
+                # elif event.key == pygame.K_RETURN:
+                #     print("Final Input self.text :", self.text)
+                #     self.text = ""  # Clear after enter
 
                 else:
-                    # Add the character typed
-                    self.text += event.unicode
+                    if event.unicode.isprintable() and event.unicode != "":
+                        self.text += event.unicode
 
                 self.isChange = True
         return self.isChange
@@ -91,10 +98,16 @@ class InputBox:
         # Change color if active
         draw_color = self.activeColor if self.isActive else self.color
 
-        pygame.draw.rect(window, draw_color, self.rect, 1)
+        pygame.draw.rect(
+            window,
+            draw_color,
+            self.rect,
+            2,
+            border_radius=self.radius,
+        )
 
         # Render the text
-        text_surface = self.font.render(self.text, True, "black")
+        text_surface = self.font.render(self.text, True, self.textColor)
         window.blit(text_surface, (self.rect.x + 5, self.rect.y + 5))
 
         if self.isActive:
@@ -118,13 +131,12 @@ class InputBox:
                 )
 
         # Auto-resize the box if text is too long
-        self.rect.w = max(self.rect.w, text_surface.get_width() + 10)
+        self.rect.w = max(self.rect.w, text_surface.get_width() + 15)
         return self
 
 
 ###################################################################
-
-if __name__ == "__main__":
+def _demo():
     pygame.init()
     # Main loop
     running = True
@@ -138,8 +150,9 @@ if __name__ == "__main__":
         pygame.Rect(100, 100, 110, 32),
         pygame.font.Font(None, 32),
         "black",
-        "red",
-        "lightblue",
+        (60, 60, 60),
+        "black",
+        radius=10,
     )
 
     clock = pygame.time.Clock()
@@ -163,3 +176,7 @@ if __name__ == "__main__":
         pygame.display.update()
 
     pygame.quit()
+
+
+if __name__ == "__main__":
+    _demo()
