@@ -2,10 +2,6 @@ import charactor
 
 
 class State:
-    active_charactor: charactor.Charactor
+    active_charactor: charactor.Charactor = None
     isActive: bool = False
-    target_charactor = charactor.Charactor
-    isTargeting: bool = False
-
-    def __init__(self):
-        pass
+    isAttacking: bool = False

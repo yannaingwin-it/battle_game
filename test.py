@@ -3,6 +3,7 @@ import random
 
 from charactor import Charactor
 from custom_cursor import CustomCursor
+from game_log import GameLog
 from state import State
 from ui.button import Button
 from ui.hp_bar import HPBar
@@ -15,7 +16,8 @@ pygame.init()
 WIDTH, HEIGHT = 1200, 700
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Battle Game")
-
+font = pygame.font.SysFont(None, 28)
+big_font = pygame.font.SysFont(None, 60)
 hand_cursor = CustomCursor(
     pygame.image.load("hand_cursor.png").convert_alpha()
 ).getCursor()
@@ -25,25 +27,18 @@ pygame.mouse.set_cursor(hand_cursor)
 bg = pygame.image.load("background.jpg")
 bg = pygame.transform.scale(bg, (WIDTH, HEIGHT))
 
-# warrior_img = pygame.image.load("warrior.png")
-# tanker_img = pygame.image.load("tanker.png")
-
-# warrior_img = pygame.transform.scale(warrior_img, (100, 100))
-# tanker_img = pygame.transform.scale(tanker_img, (100, 100))
-
-
-font = pygame.font.SysFont(None, 28)
-big_font = pygame.font.SysFont(None, 60)
+gameLog = GameLog(
+    x=0,
+    y=0,
+    width=240,
+    height=HEIGHT,
+)
 
 
 atkbtn = Button("Attack", pygame.Rect(0, 0, 80, 30), font, "red", "darkred")
 healbtn = Button("Heal", pygame.Rect(0, 0, 80, 30), font, "green", "darkgreen")
 
 
-"""
-        pygame.draw.rect(screen, (100, 100, 255), (400, 250, 200, 50))
-        pygame.draw.rect(screen, (255, 100, 100), (620, 250, 200, 50))
-"""
 warrior_btn = Button(
     "Warrior",
     pygame.Rect(400, 250, 200, 50),
@@ -110,13 +105,50 @@ action_mode = None
 logs = []
 
 
+def create_players():
+    for i, job in enumerate(player_jobs):
+        max_hp = 0
+        atk = 0
+        if job == "Warrior":
+            max_hp = random.randint(100, 130)
+            # atk = random.randint(15, 25)
+            atk = 300
+            defe = 10
+        else:
+            max_hp = random.randint(140, 180)
+            # atk = random.randint(8, 18)
+            atk = 300
+            defe = 30
+        char = Charactor(
+            x=0,
+            y=0,
+            name=player_names[i],
+            job=job,
+            level=1,
+            hp=max_hp,
+            atk=atk,
+            defe=defe,
+            exp=0,
+            is_alive=True,
+            is_player=True,
+        )
+        players.append(char)
+
+
 # ===================== AI =====================
 def create_ai():
     for i, _ in enumerate(players):
+        rand_ids: list[int] = []
         max_hp = 0
         atk = 0
         job = random.choice(["Warrior", "Tanker"])
-        enemyName = "AI" + str(i + 20)
+        rand_id = random.randint(10, 99)
+        # checking if the random id is already in the list
+        while rand_id in rand_ids:
+            rand_id = random.randint(10, 99)
+        rand_ids.append(rand_id)
+
+        enemyName = "AI" + str(rand_id)
         if job == "Warrior":
             max_hp = random.randint(100, 130)
             atk = random.randint(15, 25)
@@ -124,7 +156,7 @@ def create_ai():
         else:
             max_hp = random.randint(140, 180)
             atk = random.randint(8, 18)
-            defe = 30
+            defe = 20
 
         char = Charactor(
             0,
@@ -142,12 +174,20 @@ def create_ai():
         enemies.append(char)
 
 
+def heal(palyer: Charactor):
+    palyer.hpBar.currentHp = palyer.hpBar.currentHp + player.exp * 2 + 1
+    gameLog.addMessage(f"{palyer.name} healed")
+
+
 # ===================== 攻击 =====================
-def attack(target_list, i, dmg):
-    real = random.randint(dmg - 5, dmg + 5)
-    target_list[i] -= real
-    if target_list[i] < 0:
-        target_list[i] = 0
+def attackTo(target: Charactor):
+    attacker = State.active_charactor
+    real = random.randint(attacker.atk - 5, attacker.atk + 5)
+    dmg = real - target.defe
+    target.hpBar.currentHp -= dmg
+
+    gameLog.addMessage(f"{attacker.name} hit {target.name} -{dmg}: {real} damage")
+
     return real
 
 
@@ -178,14 +218,17 @@ clock = pygame.time.Clock()
 while running:
 
     clock.tick(30)
+    # print(clock.get_fps())
     screen.blit(bg, (0, 0))
     events = pygame.event.get()
 
     # ===================== START =====================
     if state == "start":
 
-        title = big_font.render("Setup 3 Players", True, (255, 255, 255))
-        screen.blit(title, (420, 50))
+        # title = big_font.render("Setup 3 Players", True, (255, 255, 255))
+        # screen.blit(title, (420, 50))
+        title = Label("Setup 3 Players", 420, 50, big_font, (255, 255, 255))
+        title.draw(screen)
 
         label.draw(screen)
         label.setText(f"Player {current_input+1}:")
@@ -209,7 +252,10 @@ while running:
                 if player_jobs[current_input - 1] == "Warrior"
                 else (255, 0, 0)
             )
-            show = font.render(f"Selected: {player_jobs[current_input]}", True, color)
+            display_job: str = (
+                player_jobs[current_input] if player_jobs[current_input] else ""
+            )
+            show = font.render(f"Selected: {display_job}", True, color)
             screen.blit(show, (420, 200))
 
         # NEXT
@@ -221,38 +267,16 @@ while running:
                 current_input += 1
                 if current_input >= 3:
                     # create_player()
-                    for i, job in enumerate(player_jobs):
-                        max_hp = 0
-                        atk = 0
-                        if job == "Warrior":
-                            max_hp = random.randint(100, 130)
-                            atk = random.randint(15, 25)
-                            defe = 10
-                        else:
-                            max_hp = random.randint(140, 180)
-                            atk = random.randint(8, 18)
-                            defe = 30
-                        char = Charactor(
-                            x=0,
-                            y=0,
-                            name=player_names[i],
-                            job=job,
-                            level=1,
-                            hp=max_hp,
-                            atk=atk,
-                            defe=defe,
-                            exp=0,
-                            is_alive=True,
-                            is_player=True,
-                        )
-                        players.append(char)
-
+                    create_players()
                     create_ai()
                     state = "game"
 
     # ===================== GAME =====================
     if state == "game":
 
+        # game log
+        gameLog.handleEvent(events)
+        gameLog.draw(screen)
         if (
             State.isActive
             and State.active_charactor.is_active
@@ -260,6 +284,7 @@ while running:
             and State.active_charactor.is_alive
             and State.active_charactor.is_player
         ):
+            # draw char and buttons
             char = State.active_charactor
             atkbtn.draw(screen, events)
             healbtn.draw(screen, events)
@@ -267,19 +292,54 @@ while running:
             atkbtn.rect.y = char.char_surface_rect.y
             healbtn.rect.x = char.char_surface_rect.x + 110
             healbtn.rect.y = char.char_surface_rect.y + 50
-            pass
+
+        if State.isAttacking:
+            for i, enemy in enumerate(enemies):
+                if (
+                    State.active_charactor is not None
+                    and State.isActive
+                    and enemy.is_alive
+                    and State.isAttacking
+                    and State.active_charactor.is_player
+                    and State.active_charactor.is_alive
+                    and enemy.onclick(events)
+                ):
+                    attackTo(enemy)
+                    State.isAttacking = False
+            State.active_charactor.is_active = False
 
         if atkbtn.onclick(events):
-            print(State.active_charactor.name, "someone is Attack")
+            print(State.active_charactor.name, "is Attack")
+            print(
+                State.isActive,
+                State.active_charactor.is_active,
+                State.active_charactor is not None,
+                State.active_charactor.is_alive,
+                State.active_charactor.is_player,
+            )
+            State.isAttacking = True
+
         if healbtn.onclick(events):
-            print(State.active_charactor.name, "someone is heal")
+            heal(State.active_charactor)
+            print(
+                State.isActive,
+                State.active_charactor.is_active,
+                State.active_charactor is not None,
+                State.active_charactor.is_alive,
+                State.active_charactor.is_player,
+            )
+            print(State.active_charactor.name, "is Heal")
 
         # ========== 玩家（左） ==========
         for i, player in enumerate(players):
-            x, y = 100, 120 + i * 180
+            x, y = gameLog.width + 100, 120 + (i * 180)
 
             player.x = x
             player.y = y
+
+            if player.hpBar.currentHp <= 0:
+                player.hpBar.currentHp = 0
+                player.is_alive = False
             player.draw(
                 screen,
             )
@@ -288,91 +348,40 @@ while running:
                 State.isActive = True
 
         for i, enemy in enumerate(enemies):
+            if enemy.hpBar.currentHp <= 0:
+                enemy.hpBar.currentHp = 0
+                enemy.is_alive = False
             enemy.draw(screen)
             x, y = 900, 120 + i * 180
             enemy.x = x
             enemy.y = y
 
-            if enemy.onclick(events):
-                State.target_charactor = enemy
-                State.isTargeting = True
-
             # ========== AI（右 + 翻转） ==========
 
-        # img = warrior_img if enemy_jobs[i] == "Warrior" else tanker_img
-        # img = pygame.transform.flip(img, True, False)
-
-        # screen.blit(img, (x, y))
-
-        # draw_hp(x, y - 10, enemy_hp[i])
-
-        # ========== log（红色） ==========
-        # for i, log in enumerate(logs[-6:]):
-        #     text = font.render(log, True, (255, 0, 0))
-        #     screen.blit(text, (420, 500 + i * 25))
-
         # ========== 胜负 ==========
-        # if sum(enemy_hp) <= 0:
-        #     win = big_font.render("YOU WIN!", True, (0, 255, 0))
-        #     screen.blit(win, (500, 300))
-        #     state = "end"
+        if sum(map(lambda enemy: enemy.hpBar.currentHp, enemies)) <= 0:
+            win = big_font.render("YOU WIN!", True, (0, 255, 0))
+            screen.blit(win, (500, 300))
+            state = "end"
 
-        # if sum(map(lambda char: char.maxHp, player_hp)) <= 0:
-        #     lose = big_font.render("YOU LOSE!", True, (255, 0, 0))
-        #     screen.blit(lose, (500, 300))
-        #     state = "end"
+        if sum(map(lambda player: player.hpBar.currentHp, players)) <= 0:
+            lose = big_font.render("YOU LOSE!", True, (255, 0, 0))
+            screen.blit(lose, (500, 300))
+            state = "end"
 
-        # ========== 操作按钮 ==========
-        # if selected_player is not None:
-
-        #     pygame.draw.rect(screen, (255, 0, 0), (450, 600, 150, 50))
-        #     pygame.draw.rect(screen, (0, 255, 0), (650, 600, 150, 50))
-
-        #     screen.blit(font.render("ATTACK", True, (255, 255, 255)), (470, 615))
-        #     screen.blit(font.render("HEAL", True, (255, 255, 255)), (690, 615))
-
+    if state == "end":
+        screen.fill((0, 0, 0))
+        win = big_font.render("YOU WIN!", True, (0, 255, 0))
+        screen.blit(win, (500, 300))
     # ===================== EVENTS =====================
     for event in events:
-        # mouse_pos = pygame.mouse.get_pos()
-        # screen.blit(cursor_surface, mouse_pos)
+
         if event.type == pygame.QUIT:
             running = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                gameLog.addMessage("[Game Message] New attack happened!")
 
-        # ===== GAME =====
-        if state == "game":
-            pass
-            # if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-            #     # State.isActive = False
-            #     pass
-
-            # # 选玩家
-            # for i in range(3):
-            #     x, y = 100, 120 + i * 180
-            #     if x < mx < x + 100 and y < my < y + 100:
-            #         selected_player = i
-
-            # HEAL
-            # if selected_player is not None:
-
-            # if 650 < mx < 800 and 600 < my < 650:
-            # pass
-            # player_hp[selected_player] += random.randint(10, 25)
-            # logs.append(f"Player{selected_player} HEAL")
-
-            # if player_hp[selected_player] > 150:
-            #     player_hp[selected_player] = 150
-
-            # ATTACK AI
-            # if 450 < mx < 600 and 600 < my < 650:
-
-            #     for i in range(3):
-            #         x, y = 900, 120 + i * 180
-            #         if x < mx < x + 100 and y < my < y + 100:
-
-            #             dmg = attack(enemy_hp, i, player_atk[selected_player])
-            #             logs.append(f"Player{selected_player} hit AI{i} -{dmg}")
-
-            #             ai_turn()
     pygame.display.update()
 
 pygame.quit()
