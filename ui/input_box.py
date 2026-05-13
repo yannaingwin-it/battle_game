@@ -1,9 +1,7 @@
 import pygame
 
-try:
-    from .ui_type import ColorValue
-except ImportError:
-    from ui_type import ColorValue
+
+from .ui_type import ColorValue
 
 
 class InputBox:
@@ -47,6 +45,8 @@ class InputBox:
         self.__cursor_visible = True
         self.__last_blink = pygame.time.get_ticks()
         self.radius = radius
+
+        self.default_cursor = pygame.mouse.get_cursor()
         pass
 
     def onchange(self, events: list[pygame.event.Event]):
@@ -63,14 +63,18 @@ class InputBox:
         self.isChange = False
         mouse_pos = pygame.mouse.get_pos()
         mouse_click = pygame.mouse.get_pressed()
+        if self.rect.collidepoint(mouse_pos):
+            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_IBEAM)
+        else:
+            pygame.mouse.set_cursor(self.default_cursor)
+            pass
+        # mouse click event
         if mouse_click[0] == 1:
             if self.rect.collidepoint(mouse_pos):
                 self.isActive = True
                 # Change cursor shape
-                pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_IBEAM)
             else:
                 self.isActive = False
-                pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
 
         # 2. Handle Typing (Requires Events for single-press)
         for event in events:

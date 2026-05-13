@@ -1,4 +1,7 @@
+from typing import Optional
+
 import pygame
+from .ui_type import ColorValue
 
 
 class Label:
@@ -26,19 +29,26 @@ class Label:
         x: int,
         y: int,
         font: pygame.font.Font,
-        color="black",
+        color: ColorValue = "black",
+        background: Optional[ColorValue] = None,
     ):
         self.text = text
         self.x = x
         self.y = y
         self.font = font
         self.color = color
+        self.background = background
         self.__width = 0
 
     def draw(self, window: pygame.Surface):
 
         # Render the text into a surface
-        text_surface = self.font.render(self.text, True, self.color)
+        text_surface = self.font.render(
+            self.text,
+            True,
+            self.color,
+            self.background,
+        )
         self.__width = text_surface.get_width()
         # Draw it to the screen
         window.blit(text_surface, (self.x, self.y))

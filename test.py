@@ -1,8 +1,9 @@
-from tkinter import N
-
 import pygame
 import random
 
+from charactor import Charactor
+from custom_cursor import CustomCursor
+from state import State
 from ui.button import Button
 from ui.hp_bar import HPBar
 from ui.input_box import InputBox
@@ -15,18 +16,29 @@ WIDTH, HEIGHT = 1200, 700
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Battle Game")
 
+hand_cursor = CustomCursor(
+    pygame.image.load("hand_cursor.png").convert_alpha()
+).getCursor()
+pygame.mouse.set_cursor(hand_cursor)
+
 # ===================== 资源 =====================
 bg = pygame.image.load("background.jpg")
 bg = pygame.transform.scale(bg, (WIDTH, HEIGHT))
 
-warrior_img = pygame.image.load("warrior.png")
-tanker_img = pygame.image.load("tanker.png")
+# warrior_img = pygame.image.load("warrior.png")
+# tanker_img = pygame.image.load("tanker.png")
 
-warrior_img = pygame.transform.scale(warrior_img, (100, 100))
-tanker_img = pygame.transform.scale(tanker_img, (100, 100))
+# warrior_img = pygame.transform.scale(warrior_img, (100, 100))
+# tanker_img = pygame.transform.scale(tanker_img, (100, 100))
+
 
 font = pygame.font.SysFont(None, 28)
 big_font = pygame.font.SysFont(None, 60)
+
+
+atkbtn = Button("Attack", pygame.Rect(0, 0, 80, 30), font, "red", "darkred")
+healbtn = Button("Heal", pygame.Rect(0, 0, 80, 30), font, "green", "darkgreen")
+
 
 """
         pygame.draw.rect(screen, (100, 100, 255), (400, 250, 200, 50))
@@ -39,7 +51,7 @@ warrior_btn = Button(
     "red",
     "lightblue",
     "white",
-    variant="outlined",
+    variant="filled",
     radius=4,
 )
 tanker_btn = Button(
@@ -49,7 +61,7 @@ tanker_btn = Button(
     "lightblue",
     "red",
     "white",
-    variant="outlined",
+    variant="filled",
     radius=4,
 )
 next_btn = Button(
@@ -78,9 +90,11 @@ inputBox = InputBox(
 state = "start"
 
 player_names = ["", "", ""]
-player_jobs = [None, None, None]
+player_jobs: list[str] = [None, None, None]
 player_hp: list[HPBar] = [None, None, None]
 
+players: list[Charactor] = []
+enemies: list[Charactor] = []
 
 player_atk = [0, 0, 0]
 
@@ -88,7 +102,7 @@ enemy_jobs = []
 enemy_hp = []
 enemy_atk = []
 
-current_input = 0
+current_input: int = 0
 
 selected_player = None
 action_mode = None
@@ -98,64 +112,34 @@ logs = []
 
 # ===================== AI =====================
 def create_ai():
-    jobs, hp, atk = [], [], []
-
-    for _ in range(3):
+    for i, _ in enumerate(players):
+        max_hp = 0
+        atk = 0
         job = random.choice(["Warrior", "Tanker"])
-        jobs.append(job)
-
+        enemyName = "AI" + str(i + 20)
         if job == "Warrior":
-            hp.append(random.randint(100, 130))
-            atk.append(random.randint(15, 25))
+            max_hp = random.randint(100, 130)
+            atk = random.randint(15, 25)
+            defe = 10
         else:
-            hp.append(random.randint(140, 180))
-            atk.append(random.randint(8, 18))
+            max_hp = random.randint(140, 180)
+            atk = random.randint(8, 18)
+            defe = 30
 
-    return jobs, hp, atk
-
-
-# ===================== 玩家 =====================
-def create_player():
-    for i in range(3):
-
-        if player_jobs[i] == "Warrior":
-            player_hp[i] = 120
-            player_hp[i] = HPBar(
-                x=100,
-                y=200,
-                width=150,
-                height=20,
-                maxHp=120,
-                currentHp=120,
-                font=pygame.font.Font(None, 32),
-            )
-            player_atk[i] = random.randint(15, 25)
-        else:
-            player_hp[i] = HPBar(
-                x=100,
-                y=200,
-                width=150,
-                height=20,
-                maxHp=160,
-                currentHp=160,
-                font=pygame.font.Font(None, 32),
-            )
-            player_atk[i] = random.randint(8, 18)
-
-
-# ===================== 血条 =====================
-def draw_hp(
-    x,
-    y,
-    hp: HPBar,
-):
-    # hp = max(hp, 0)
-    hp.x = x
-    hp.y = y
-    hp.draw(screen)
-    # ratio = hp / max_hp
-    # pygame.draw.rect(screen, (255, 0, 0), (x, y, 100, 8))
-    # pygame.draw.rect(screen, (0, 255, 0), (x, y, 100 * ratio, 8))
+        char = Charactor(
+            0,
+            0,
+            enemyName,
+            job,
+            1,
+            max_hp,
+            atk,
+            defe,
+            0,
+            True,
+            False,
+        )
+        enemies.append(char)
 
 
 # ===================== 攻击 =====================
@@ -169,39 +153,39 @@ def attack(target_list, i, dmg):
 
 # ===================== AI回合（只打一人） =====================
 def ai_turn():
-    attacker = random.randint(0, 2)
-    target = random.randint(0, 2)
+    # attacker = random.randint(0, 2)
+    # target = random.randint(0, 2)
 
-    dmg = random.randint(8, 20)
-    player_hp[target] -= dmg
+    # dmg = random.randint(8, 20)
+    # player_hp[target] -= dmg
 
-    if player_hp[target] < 0:
-        player_hp[target] = 0
+    # if player_hp[target] < 0:
+    #     player_hp[target] = 0
 
-    logs.append(f"AI{attacker} hit Player{target} -{dmg}")
+    # logs.append(f"AI{attacker} hit Player{target} -{dmg}")
+    pass
 
 
 counter = 0
 # ===================== 主循环 =====================
 running = True
 clock = pygame.time.Clock()
+
+# pygame.mixer.music.load("technotronic.ogg")
+# pygame.mixer.music.play(loops=-1, start=0.0)
+
+
 while running:
+
     clock.tick(30)
     screen.blit(bg, (0, 0))
-    # screen.fill("white")
     events = pygame.event.get()
+
     # ===================== START =====================
     if state == "start":
 
         title = big_font.render("Setup 3 Players", True, (255, 255, 255))
         screen.blit(title, (420, 50))
-        # {player_names[current_input]}
-        # txt = font.render(
-        #     f"Player {current_input+1}:",
-        #     True,
-        #     (255, 255, 255),
-        # )
-        # txt_rect = txt.get_rect()
 
         label.draw(screen)
         label.setText(f"Player {current_input+1}:")
@@ -209,14 +193,6 @@ while running:
         inputBox.draw(screen)
         inputBox.onchange(events)
 
-        # screen.blit(txt, (420, 150))
-
-        # 职业按钮
-        # pygame.draw.rect(screen, (100, 100, 255), (400, 250, 200, 50))
-        # pygame.draw.rect(screen, (255, 100, 100), (620, 250, 200, 50))
-
-        # screen.blit(font.render("Warrior", True, (255, 255, 255)), (450, 260))
-        # screen.blit(font.render("Tanker", True, (255, 255, 255)), (670, 260))
         warrior_btn.draw(screen, events)
         tanker_btn.draw(screen, events)
         if warrior_btn.onclick(events):
@@ -227,60 +203,113 @@ while running:
             pass
 
         # 显示当前职业
-        if player_jobs[current_input]:
+        if current_input <= 2:
             color = (
-                (0, 255, 0) if player_jobs[current_input] == "Warrior" else (255, 0, 0)
+                (0, 255, 0)
+                if player_jobs[current_input - 1] == "Warrior"
+                else (255, 0, 0)
             )
             show = font.render(f"Selected: {player_jobs[current_input]}", True, color)
             screen.blit(show, (420, 200))
 
         # NEXT
-        # pygame.draw.rect(screen, (0, 255, 0), (500, 350, 200, 60))
-        # screen.blit(font.render("NEXT", True, (0, 0, 0)), (570, 370))
+
         next_btn.draw(screen, events)
         if next_btn.onclick(events):
-            print(player_names[current_input], player_jobs[current_input])
             player_names[current_input] = inputBox.text
             if player_names[current_input] and player_jobs[current_input]:
                 current_input += 1
                 if current_input >= 3:
-                    create_player()
-                    enemy_jobs, enemy_hp, enemy_atk = create_ai()
+                    # create_player()
+                    for i, job in enumerate(player_jobs):
+                        max_hp = 0
+                        atk = 0
+                        if job == "Warrior":
+                            max_hp = random.randint(100, 130)
+                            atk = random.randint(15, 25)
+                            defe = 10
+                        else:
+                            max_hp = random.randint(140, 180)
+                            atk = random.randint(8, 18)
+                            defe = 30
+                        char = Charactor(
+                            x=0,
+                            y=0,
+                            name=player_names[i],
+                            job=job,
+                            level=1,
+                            hp=max_hp,
+                            atk=atk,
+                            defe=defe,
+                            exp=0,
+                            is_alive=True,
+                            is_player=True,
+                        )
+                        players.append(char)
+
+                    create_ai()
                     state = "game"
 
     # ===================== GAME =====================
     if state == "game":
 
+        if (
+            State.isActive
+            and State.active_charactor.is_active
+            and State.active_charactor is not None
+            and State.active_charactor.is_alive
+            and State.active_charactor.is_player
+        ):
+            char = State.active_charactor
+            atkbtn.draw(screen, events)
+            healbtn.draw(screen, events)
+            atkbtn.rect.x = char.char_surface_rect.x + 110
+            atkbtn.rect.y = char.char_surface_rect.y
+            healbtn.rect.x = char.char_surface_rect.x + 110
+            healbtn.rect.y = char.char_surface_rect.y + 50
+            pass
+
+        if atkbtn.onclick(events):
+            print(State.active_charactor.name, "someone is Attack")
+        if healbtn.onclick(events):
+            print(State.active_charactor.name, "someone is heal")
+
         # ========== 玩家（左） ==========
-        for i in range(3):
+        for i, player in enumerate(players):
             x, y = 100, 120 + i * 180
-            counter += 1
-            img = warrior_img if player_jobs[i] == "Warrior" else tanker_img
-            screen.blit(img, (x, y))
 
-            draw_hp(
-                x,
-                y - 14,
-                player_hp[i],
+            player.x = x
+            player.y = y
+            player.draw(
+                screen,
             )
+            if player.onclick(events):
+                State.active_charactor = player
+                State.isActive = True
 
-            name = font.render(player_names[i], True, (255, 255, 255))
-            screen.blit(name, (x, y + 10))
-            # ========== AI（右 + 翻转） ==========
-        for i in range(3):
+        for i, enemy in enumerate(enemies):
+            enemy.draw(screen)
             x, y = 900, 120 + i * 180
+            enemy.x = x
+            enemy.y = y
 
-            img = warrior_img if enemy_jobs[i] == "Warrior" else tanker_img
-            img = pygame.transform.flip(img, True, False)
+            if enemy.onclick(events):
+                State.target_charactor = enemy
+                State.isTargeting = True
 
-            screen.blit(img, (x, y))
+            # ========== AI（右 + 翻转） ==========
 
-            # draw_hp(x, y - 10, enemy_hp[i])
+        # img = warrior_img if enemy_jobs[i] == "Warrior" else tanker_img
+        # img = pygame.transform.flip(img, True, False)
+
+        # screen.blit(img, (x, y))
+
+        # draw_hp(x, y - 10, enemy_hp[i])
 
         # ========== log（红色） ==========
-        for i, log in enumerate(logs[-6:]):
-            text = font.render(log, True, (255, 0, 0))
-            screen.blit(text, (420, 500 + i * 25))
+        # for i, log in enumerate(logs[-6:]):
+        #     text = font.render(log, True, (255, 0, 0))
+        #     screen.blit(text, (420, 500 + i * 25))
 
         # ========== 胜负 ==========
         # if sum(enemy_hp) <= 0:
@@ -288,91 +317,62 @@ while running:
         #     screen.blit(win, (500, 300))
         #     state = "end"
 
-        if sum(map(lambda char: char.maxHp, player_hp)) <= 0:
-            lose = big_font.render("YOU LOSE!", True, (255, 0, 0))
-            screen.blit(lose, (500, 300))
-            state = "end"
+        # if sum(map(lambda char: char.maxHp, player_hp)) <= 0:
+        #     lose = big_font.render("YOU LOSE!", True, (255, 0, 0))
+        #     screen.blit(lose, (500, 300))
+        #     state = "end"
 
         # ========== 操作按钮 ==========
-        if selected_player is not None:
+        # if selected_player is not None:
 
-            pygame.draw.rect(screen, (255, 0, 0), (450, 600, 150, 50))
-            pygame.draw.rect(screen, (0, 255, 0), (650, 600, 150, 50))
+        #     pygame.draw.rect(screen, (255, 0, 0), (450, 600, 150, 50))
+        #     pygame.draw.rect(screen, (0, 255, 0), (650, 600, 150, 50))
 
-            screen.blit(font.render("ATTACK", True, (255, 255, 255)), (470, 615))
-            screen.blit(font.render("HEAL", True, (255, 255, 255)), (690, 615))
+        #     screen.blit(font.render("ATTACK", True, (255, 255, 255)), (470, 615))
+        #     screen.blit(font.render("HEAL", True, (255, 255, 255)), (690, 615))
 
     # ===================== EVENTS =====================
     for event in events:
-
+        # mouse_pos = pygame.mouse.get_pos()
+        # screen.blit(cursor_surface, mouse_pos)
         if event.type == pygame.QUIT:
             running = False
 
-        # ===== START =====
-        if state == "start":
-            pass
-            # if event.type == pygame.KEYDOWN:
-            #     if event.key == pygame.K_BACKSPACE:
-            #         player_names[current_input] = player_names[current_input][:-1]
-            #     else:
-            #         player_names[current_input] += event.unicode
-
-            # if event.type == pygame.MOUSEBUTTONDOWN:
-
-            #     mx, my = pygame.mouse.get_pos()
-
-            #     if 400 < mx < 600 and 250 < my < 300:
-            #         player_jobs[current_input] = "Warrior"
-
-            #     if 620 < mx < 820 and 250 < my < 300:
-            #         player_jobs[current_input] = "Tanker"
-
-            #     if 500 < mx < 700 and 350 < my < 410:
-
-            #         if player_names[current_input] and player_jobs[current_input]:
-
-            #             current_input += 1
-
-            #             if current_input >= 3:
-            #                 create_player()
-            #                 enemy_jobs, enemy_hp, enemy_atk = create_ai()
-            #                 state = "game"
-
         # ===== GAME =====
         if state == "game":
+            pass
+            # if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            #     # State.isActive = False
+            #     pass
 
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            # # 选玩家
+            # for i in range(3):
+            #     x, y = 100, 120 + i * 180
+            #     if x < mx < x + 100 and y < my < y + 100:
+            #         selected_player = i
 
-                mx, my = pygame.mouse.get_pos()
+            # HEAL
+            # if selected_player is not None:
 
-                # 选玩家
-                for i in range(3):
-                    x, y = 100, 120 + i * 180
-                    if x < mx < x + 100 and y < my < y + 100:
-                        selected_player = i
+            # if 650 < mx < 800 and 600 < my < 650:
+            # pass
+            # player_hp[selected_player] += random.randint(10, 25)
+            # logs.append(f"Player{selected_player} HEAL")
 
-                # HEAL
-                if selected_player is not None:
+            # if player_hp[selected_player] > 150:
+            #     player_hp[selected_player] = 150
 
-                    if 650 < mx < 800 and 600 < my < 650:
-                        player_hp[selected_player] += random.randint(10, 25)
-                        logs.append(f"Player{selected_player} HEAL")
+            # ATTACK AI
+            # if 450 < mx < 600 and 600 < my < 650:
 
-                        if player_hp[selected_player] > 150:
-                            player_hp[selected_player] = 150
+            #     for i in range(3):
+            #         x, y = 900, 120 + i * 180
+            #         if x < mx < x + 100 and y < my < y + 100:
 
-                    # ATTACK AI
-                    if 450 < mx < 600 and 600 < my < 650:
+            #             dmg = attack(enemy_hp, i, player_atk[selected_player])
+            #             logs.append(f"Player{selected_player} hit AI{i} -{dmg}")
 
-                        for i in range(3):
-                            x, y = 900, 120 + i * 180
-                            if x < mx < x + 100 and y < my < y + 100:
-
-                                dmg = attack(enemy_hp, i, player_atk[selected_player])
-                                logs.append(f"Player{selected_player} hit AI{i} -{dmg}")
-
-                                ai_turn()
-
+            #             ai_turn()
     pygame.display.update()
 
 pygame.quit()

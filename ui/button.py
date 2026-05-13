@@ -1,9 +1,6 @@
 import pygame
 
-try:
-    from .ui_type import Variant, ColorValue
-except ImportError:
-    from ui_type import Variant, ColorValue
+from .ui_type import ColorValue, Variant
 
 
 class Button:
@@ -111,7 +108,7 @@ def _demo():
         "red",
         "lightblue",
         radius=8,
-        variant="outlined",
+        variant="filled",
     )
 
     clock = pygame.time.Clock()
@@ -129,6 +126,7 @@ def _demo():
         # 3. listen click event
         if btn.onclick(events):
             print("clicked")
+            btn.color = "green"
 
         ############################################################
         pygame.display.update()
