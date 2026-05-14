@@ -1,0 +1,92 @@
+{
+    "player_team": {
+        "name": "Player",
+        "units": [
+            {
+                "name": "hello world",
+                "profession": "Warrior",
+                "team_name": "Player",
+                "max_hp": 100,
+                "hp": 83,
+                "atk": 22,
+                "defence": 7,
+                "exp": 8,
+                "rank": 1
+            },
+            {
+                "name": "doing",
+                "profession": "Warrior",
+                "team_name": "Player",
+                "max_hp": 100,
+                "hp": 100,
+                "atk": 14,
+                "defence": 6,
+                "exp": 0,
+                "rank": 1
+            },
+            {
+                "name": "something",
+                "profession": "Tanker",
+                "team_name": "Player",
+                "max_hp": 100,
+                "hp": 100,
+                "atk": 9,
+                "defence": 7,
+                "exp": 15,
+                "rank": 1
+            }
+        ]
+    },
+    "ai_team": {
+        "name": "AI",
+        "units": [
+            {
+                "name": "AI95",
+                "profession": "Tanker",
+                "team_name": "AI",
+                "max_hp": 100,
+                "hp": 100,
+                "atk": 7,
+                "defence": 9,
+                "exp": 0,
+                "rank": 1
+            },
+            {
+                "name": "AI44",
+                "profession": "Tanker",
+                "team_name": "AI",
+                "max_hp": 100,
+                "hp": 100,
+                "atk": 6,
+                "defence": 7,
+                "exp": 0,
+                "rank": 1
+            },
+            {
+                "name": "AI93",
+                "profession": "Warrior",
+                "team_name": "AI",
+                "max_hp": 100,
+                "hp": 85,
+                "atk": 13,
+                "defence": 2,
+                "exp": 19,
+                "rank": 1
+            }
+        ]
+    },
+    "messages": [
+        "Game loaded.",
+        "Game saved.",
+        "Game saved.",
+        "Game saved.",
+        "Game saved.",
+        "Game saved.",
+        "Game saved.",
+        "Game saved.",
+        "Game saved.",
+        "Selected attacker: something.",
+        "Selected attacker: something.",
+        "Game loaded."
+    ]
+}
