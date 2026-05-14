@@ -160,7 +160,7 @@ class Button:
 
     def clicked(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-            self.click_sound.play()
+            self.click_sound.play(0)
         return event.type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(
             event.pos
         )
