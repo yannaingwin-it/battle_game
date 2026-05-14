@@ -211,9 +211,11 @@ counter = 0
 running = True
 clock = pygame.time.Clock()
 
-# pygame.mixer.music.load("technotronic.ogg")
-# pygame.mixer.music.play(loops=-1, start=0.0)
+pygame.mixer.music.load("technotronic.ogg")
+pygame.mixer.music.set_volume(0.1)
+pygame.mixer.music.play(loops=-1, start=0.0)
 
+click_sound = pygame.mixer.Sound("click.wav")
 
 while running:
 
@@ -380,6 +382,7 @@ while running:
             running = False
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
+                # example of adding a message
                 gameLog.addMessage("[Game Message] New attack happened!")
 
     pygame.display.update()

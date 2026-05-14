@@ -42,6 +42,7 @@ class Button:
         self.clicked = False
         self.radius = radius
         self.variant = variant
+        self.click_sound = pygame.mixer.Sound("click.wav")
 
     def draw(self, window: pygame.Surface, events: list[pygame.event.Event]):
         mouse_pos = pygame.mouse.get_pos()
@@ -86,6 +87,7 @@ class Button:
         if self.rect.collidepoint(mouse_pos):
             for event in events:
                 if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                    self.click_sound.play()
                     return True
         return False
 
