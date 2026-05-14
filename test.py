@@ -385,6 +385,8 @@ while running:
                 # example of adding a message
                 gameLog.addMessage("[Game Message] New attack happened!")
 
+            if event.key == pygame.MOUSEBUTTONDOWN and event.button == 1 and :  # scroll up
+                gameLog.scroll(-gameLog.lineHeight)
     pygame.display.update()
 
 pygame.quit()

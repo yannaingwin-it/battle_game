@@ -73,6 +73,7 @@ ASSET_PATHS = {
 MUSIC_PATH = os.path.join(MUSIC_DIR, "background_music.mp3")
 ATTACK_SOUND_PATH = os.path.join(SOUND_DIR, "attack.wav")
 CLICK_SOUND_PATH = os.path.join(SOUND_DIR, "click.wav")
+click_sound = pygame.mixer.Sound("click.wav")
 
 
 def draw_text(text, x, y, color=BLACK, font=FONT):

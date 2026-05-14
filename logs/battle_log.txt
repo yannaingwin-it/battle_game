@@ -430,3 +430,140 @@
 [2026-05-14 14:33:18] Selected target: AI74.
 [2026-05-14 14:33:19] Hero2 attacked AI74: damage 8, random -3.
 [2026-05-14 14:33:19] AI76 attacked Hero1: damage 7, random 1.
+[2026-05-14 14:37:08] Game started. Select your unit, then select an AI target.
+[2026-05-14 14:37:11] Selected attacker: fgmof.
+[2026-05-14 14:37:14] Selected target: AI13.
+[2026-05-14 14:37:17] fgmof attacked AI13: damage 25, random 9.
+[2026-05-14 14:37:17] AI13 attacked fgmof: damage 15, random 7.
+[2026-05-14 14:37:18] Select one player unit and one AI target first.
+[2026-05-14 14:37:19] Selected attacker: fgmof.
+[2026-05-14 14:37:20] Selected target: AI97.
+[2026-05-14 14:37:21] fgmof attacked AI97: damage 16, random 0.
+[2026-05-14 14:37:21] AI13 attacked fgmof: damage 10, random 2.
+[2026-05-14 14:37:22] Selected attacker: fgmof.
+[2026-05-14 14:37:23] Selected target: AI91.
+[2026-05-14 14:37:24] fgmof attacked AI91: damage 16, random 3.
+[2026-05-14 14:37:24] AI13 attacked fgmof: damage 8, random 0.
+[2026-05-14 14:37:25] Selected attacker: fgmof.
+[2026-05-14 14:37:25] Selected target: AI97.
+[2026-05-14 14:37:26] fgmof attacked AI97: damage 17, random 11.
+[2026-05-14 14:37:26] AI13 attacked fgmof: damage 10, random 2.
+[2026-05-14 14:37:27] Selected attacker: gbrnih.
+[2026-05-14 14:37:27] Selected target: AI97.
+[2026-05-14 14:37:28] gbrnih attacked AI97: damage 19, random 8.
+[2026-05-14 14:37:28] AI13 attacked fgmof: damage 14, random 6.
+[2026-05-14 14:37:29] Selected attacker: gbrnih.
+[2026-05-14 14:37:29] Selected target: AI97.
+[2026-05-14 14:37:30] gbrnih attacked AI97: damage 10, random -1.
+[2026-05-14 14:37:30] AI13 attacked fgmof: damage 7, random -1.
+[2026-05-14 14:37:31] Selected attacker: fgmof.
+[2026-05-14 14:37:31] Selected target: AI91.
+[2026-05-14 14:37:32] fgmof attacked AI91: damage 4, random 1.
+[2026-05-14 14:37:32] AI13 attacked fgmof: damage 12, random 4.
+[2026-05-14 14:37:33] Selected attacker: fgmof.
+[2026-05-14 14:37:34] Selected target: AI91.
+[2026-05-14 14:37:34] fgmof attacked AI91: damage 22, random 9.
+[2026-05-14 14:37:34] AI13 attacked fgmof: damage 12, random 4.
+[2026-05-14 14:37:35] Selected attacker: fgmof.
+[2026-05-14 14:37:36] Selected target: AI91.
+[2026-05-14 14:37:37] fgmof promoted to rank 2.
+[2026-05-14 14:37:37] fgmof attacked AI91: damage 17, random 4.
+[2026-05-14 14:37:37] AI13 promoted to rank 2.
+[2026-05-14 14:37:37] AI13 attacked fgmof: damage 18, random 11.
+[2026-05-14 14:37:38] Selected attacker: fgmof.
+[2026-05-14 14:37:38] Selected target: AI91.
+[2026-05-14 14:37:39] fgmof attacked AI91: damage 3, random -1.
+[2026-05-14 14:37:39] AI13 attacked fgmof: damage 9, random 0.
+[2026-05-14 14:37:40] Selected attacker: fgmof.
+[2026-05-14 14:37:41] Selected target: AI91.
+[2026-05-14 14:37:41] fgmof attacked AI91: damage 13, random 10.
+[2026-05-14 14:37:41] AI13 attacked fgmof: damage 6, random -3.
+[2026-05-14 14:37:42] Selected attacker: fgmof.
+[2026-05-14 14:37:43] Selected target: AI91.
+[2026-05-14 14:37:43] fgmof attacked AI91: damage 11, random 8.
+[2026-05-14 14:37:43] AI13 attacked fgmof: damage 21, random 12.
+[2026-05-14 14:37:44] Selected attacker: gbrnih.
+[2026-05-14 14:37:44] Selected target: AI91.
+[2026-05-14 14:37:45] gbrnih attacked AI91: damage 13, random 5.
+[2026-05-14 14:37:45] AI13 attacked fgmof: damage 14, random 5.
+[2026-05-14 14:37:46] Selected target: AI91.
+[2026-05-14 14:37:47] Select one player unit and one AI target first.
+[2026-05-14 14:37:47] Select one player unit and one AI target first.
+[2026-05-14 14:37:49] Selected attacker: fgmof.
+[2026-05-14 14:37:50] Selected target: AI97.
+[2026-05-14 14:37:51] fgmof attacked AI97: damage 8, random 2.
+[2026-05-14 14:37:51] AI13 attacked fgmof: damage 21, random 12.
+[2026-05-14 14:37:52] Selected attacker: fgmof.
+[2026-05-14 14:37:53] Selected target: AI97.
+[2026-05-14 14:37:53] fgmof attacked AI97: damage 5, random -1.
+[2026-05-14 14:37:53] AI13 promoted to rank 3.
+[2026-05-14 14:37:53] AI13 attacked fgmof: damage 17, random 8.
+[2026-05-14 14:37:54] Selected attacker: gbrnih.
+[2026-05-14 14:37:55] Selected target: AI91.
+[2026-05-14 14:37:55] gbrnih attacked AI91: damage 5, random -3.
+[2026-05-14 14:37:55] AI13 attacked fgmof: damage 21, random 10.
+[2026-05-14 14:37:56] Selected attacker: fgmof.
+[2026-05-14 14:37:56] Selected target: AI97.
+[2026-05-14 14:37:57] fgmof attacked AI97: damage 17, random 11.
+[2026-05-14 14:37:57] AI13 attacked fgmof: damage 21, random 10.
+[2026-05-14 14:37:58] Selected attacker: fgmof.
+[2026-05-14 14:37:59] Selected target: AI97.
+[2026-05-14 14:37:59] fgmof promoted to rank 2.
+[2026-05-14 14:37:59] fgmof attacked AI97: damage 16, random 10.
+[2026-05-14 14:37:59] AI13 attacked fgmof: damage 18, random 8.
+[2026-05-14 14:38:00] Selected attacker: gbrnih.
+[2026-05-14 14:38:01] Selected target: AI13.
+[2026-05-14 14:38:01] gbrnih attacked AI13: damage 11, random 1.
+[2026-05-14 14:38:01] AI13 attacked fgmof: damage 15, random 5.
+[2026-05-14 14:38:02] Selected attacker: gbrnih.
+[2026-05-14 14:38:02] Selected target: AI13.
+[2026-05-14 14:38:03] gbrnih attacked AI13: damage 12, random 2.
+[2026-05-14 14:38:03] AI13 attacked gbrnih: damage 10, random 5.
+[2026-05-14 14:38:04] Selected attacker: gbrnih.
+[2026-05-14 14:38:04] Selected target: AI13.
+[2026-05-14 14:38:05] gbrnih promoted to rank 2.
+[2026-05-14 14:38:05] AI13 promoted to rank 4.
+[2026-05-14 14:38:05] gbrnih attacked AI13: damage 20, random 10.
+[2026-05-14 14:38:05] AI13 attacked gbrnih: damage 19, random 12.
+[2026-05-14 14:38:06] Selected attacker: gbrnih.
+[2026-05-14 14:38:06] Selected target: AI13.
+[2026-05-14 14:38:07] gbrnih attacked AI13: damage 19, random 8.
+[2026-05-14 14:38:07] AI13 attacked gbrnih: damage 16, random 9.
+[2026-05-14 14:38:07] Selected attacker: gbrnih.
+[2026-05-14 14:38:08] Selected target: AI13.
+[2026-05-14 14:38:08] gbrnih attacked AI13: damage 13, random 2.
+[2026-05-14 14:38:08] AI13 attacked gbrnih: damage 11, random 4.
+[2026-05-14 14:38:09] Selected attacker: gbrnih.
+[2026-05-14 14:38:09] Selected target: AI13.
+[2026-05-14 14:38:10] gbrnih promoted to rank 3.
+[2026-05-14 14:38:10] gbrnih attacked AI13: damage 21, random 10.
+[2026-05-14 14:38:10] AI13 attacked gbrnih: damage 18, random 12.
+[2026-05-14 14:38:11] Selected attacker: gbrnih.
+[2026-05-14 14:38:11] Selected target: AI13.
+[2026-05-14 14:38:12] AI13 promoted to rank 5.
+[2026-05-14 14:38:12] gbrnih attacked AI13: damage 15, random 2.
+[2026-05-14 14:38:12] AI13 attacked gbrnih: damage 17, random 9.
+[2026-05-14 14:38:12] Selected attacker: gbrnih.
+[2026-05-14 14:38:13] Selected target: AI13.
+[2026-05-14 14:38:14] gbrnih attacked AI13: damage 21, random 8.
+[2026-05-14 14:38:14] AI13 attacked gbrnih: damage 13, random 5.
+[2026-05-14 14:38:14] Selected attacker: gbrnih.
+[2026-05-14 14:38:15] Selected target: AI13.
+[2026-05-14 14:38:15] gbrnih promoted to rank 4.
+[2026-05-14 14:38:15] gbrnih attacked AI13: damage 22, random 9.
+[2026-05-14 14:38:15] AI13 attacked gbrnih: damage 10, random 2.
+[2026-05-14 14:38:16] Selected attacker: gbrnih.
+[2026-05-14 14:38:16] Selected target: AI13.
+[2026-05-14 14:38:17] gbrnih attacked AI13: damage 13, random -2.
+[2026-05-14 14:38:17] AI13 attacked gbrnih: damage 19, random 11.
+[2026-05-14 14:38:17] Selected attacker: gbrnih.
+[2026-05-14 14:38:18] Selected target: AI13.
+[2026-05-14 14:38:19] AI13 promoted to rank 6.
+[2026-05-14 14:38:19] gbrnih attacked AI13: damage 13, random -2.
+[2026-05-14 14:38:19] gbrnih promoted to rank 5.
+[2026-05-14 14:38:19] AI13 attacked gbrnih: damage 22, random 12.
+[2026-05-14 14:38:20] Selected attacker: gbrnih.
+[2026-05-14 14:38:20] Selected target: AI13.
+[2026-05-14 14:38:21] gbrnih attacked AI13: damage 18, random 2.
+[2026-05-14 14:38:21] Player wins! All AI units are defeated.
+[2026-05-14 14:38:26] Game started. Select your unit, then select an AI target.

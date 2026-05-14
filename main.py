@@ -1,7 +1,9 @@
 import pygame
 import random
 import math
-
+from custom_cursor import CustomCursor
+from game_log import GameLog
+from ui.button import Button
 pygame.init()
 
 # ===================== 基础 =====================
@@ -23,7 +25,27 @@ tanker_img = pygame.transform.scale(tanker_img, (90, 90))
 
 font = pygame.font.SysFont(None, 26)
 big_font = pygame.font.SysFont(None, 60)
-
+gameLog = GameLog(x=0, y=0, width=240, height=HEIGHT)
+restart_btn  = Button(
+        "Restart",
+        pygame.Rect(100, 100, 110, 32),
+        pygame.font.Font(None, 32),
+        "black",
+        "red",
+        "lightblue",
+        radius=8,
+        variant="filled",
+    )
+quit_btn  = Button(
+        "Quit",
+        pygame.Rect(100, 100, 110, 32),
+        pygame.font.Font(None, 32),
+        "black",
+        "red",
+        "lightblue",
+        radius=8,
+        variant="filled",
+    )
 # ===================== 状态 =====================
 state = "start"
 
@@ -118,7 +140,7 @@ def create_player():
 
     for i in range(3):
 
-        player_pos.append([120, 120 + i * 180])
+        player_pos.append([300, 120 + i * 180])
 
         if player_jobs[i] == "Warrior":
 
@@ -145,7 +167,8 @@ def add_exp(i, v):
         player_atk[i] += 2
         player_gold[i] += 20
 
-        logs.append(f"{player_names[i]} Rank Up!")
+        # logs.append(f"{player_names[i]} Rank Up!")
+        gameLog.addMessage(f"{player_names[i]} Rank Up!")
 
 # ===================== 移动 =====================
 def move(pos, tx, ty, speed=4):
@@ -209,12 +232,37 @@ def ai_turn():
 
     battle_state = "enemy_move"
 
+def game_restart():
+    player_names = ["", "", ""]
+    player_jobs = [None, None, None]
+    player_hp = [0, 0, 0]
+    player_maxhp = [0, 0, 0]
+    player_atk = [0, 0, 0]
+    player_rank = [1, 1, 1]
+    player_exp = [0, 0, 0]
+    player_gold = [0, 0, 0]
+    current_input = 0
+    selected_player = None
+    action_mode = None
+    turn = "player"
+    gameLog.messages = []
+
 # ===================== 主循环 =====================
 running = True
+pygame.mixer.music.load("technotronic.ogg")
+pygame.mixer.music.set_volume(0.8)
+pygame.mixer.music.play(loops=-1, start=0.0)
 
+hand_cursor = CustomCursor(
+    pygame.image.load("hand_cursor.png")
+).getCursor()
+pygame.mouse.set_cursor(hand_cursor)
+click_sound = pygame.mixer.Sound("click.wav")   
+click_healsound = pygame.mixer.Sound("spell1_0.wav")
 while running:
 
     screen.blit(bg, (0, 0))
+    events = pygame.event.get()
 
     # ===================== START =====================
     if state == "start":
@@ -273,6 +321,13 @@ while running:
     # ===================== GAME =====================
     if state == "game":
 
+        gameLog.handleEvent(events)
+        gameLog.draw(screen)
+        restart_btn.draw(screen,events)
+        restart_btn.rect.x = 20
+        restart_btn.rect.y = HEIGHT - HEIGHT - 60
+        if restart_btn.draw(screen,events):
+            game_restart()
         # ===================== 玩家 =====================
         for i in range(3):
 
@@ -336,12 +391,12 @@ while running:
             )
 
         # ===================== LOG =====================
-        for i, l in enumerate(logs[-6:]):
+        # for i, l in enumerate(logs[-6:]):
 
-            screen.blit(
-                font.render(l, True, (255, 200, 0)),
-                (420, 500 + i * 22)
-            )
+        #     screen.blit(
+        #         font.render(l, True, (255, 200, 0)),
+        #         (420, 500 + i * 22)
+        #     )
 
         # ===================== WIN LOSE =====================
         if sum(enemy_hp) <= 0:
@@ -378,16 +433,18 @@ while running:
 
                 dmg = damage(player_atk[p])
 
-                enemy_hp[e] -= dmg
+                # enemy_hp[e] -= 
+                enemy_hp[e] -= dmg+ player_rank[p] * 2
 
                 if enemy_hp[e] < 0:
                     enemy_hp[e] = 0
 
                 add_exp(p, 10)
 
-                logs.append(
-                    f"{player_names[p]} hit {enemy_names[e]} -{dmg}"
-                )
+                # logs.append(
+                #     f"{player_names[p]} hit {enemy_names[e]} -{dmg}"
+                # )
+                gameLog.addMessage(f"{player_names[p]} hit {enemy_names[e]} for {dmg} damage!")
 
                 battle_state = "player_return"
 
@@ -420,10 +477,8 @@ while running:
                 if player_hp[t] < 0:
                     player_hp[t] = 0
 
-                logs.append(
-                    f"{enemy_names[a]} hit {player_names[t]} -{dmg}"
-                )
-
+               
+                gameLog.addMessage(f"{enemy_names[a]} hit {player_names[t]} for {dmg} damage!")
                 battle_state = "enemy_return"
 
         # ===================== AI返回 =====================
@@ -446,6 +501,20 @@ while running:
 
     # ===================== WIN =====================
     if state == "win":
+        restart_btn.draw(screen,events)
+        quit_btn.draw(screen,events)
+        if quit_btn.onclick(events):
+            running = False
+        # place button
+        restart_btn.rect.x = 550
+        restart_btn.rect.y = 400
+        quit_btn.rect.x = 550   
+        quit_btn.rect.y = 450   
+        if restart_btn.onclick(events):
+            state = "start"
+            # restart all state to default
+            game_restart()
+
 
         screen.blit(
             big_font.render("YOU WIN!", True, (0, 255, 0)),
@@ -461,7 +530,7 @@ while running:
         )
 
     # ===================== EVENTS =====================
-    for event in pygame.event.get():
+    for event in events:
 
         if event.type == pygame.QUIT:
             running = False
@@ -472,19 +541,18 @@ while running:
             if event.type == pygame.KEYDOWN:
 
                 if event.key == pygame.K_BACKSPACE:
-
+                    click_sound.play(1, )
                     player_names[current_input] = (
                         player_names[current_input][:-1]
                     )
 
                 else:
-
+                    click_sound.play(1, )
                     player_names[current_input] += event.unicode
 
-            if event.type == pygame.MOUSEBUTTONDOWN:
-
+            if event.type == pygame.MOUSEBUTTONDOWN:    
                 mx, my = pygame.mouse.get_pos()
-
+                click_sound.play(1, )  
                 # Warrior
                 if 400 < mx < 580 and 250 < my < 300:
 
@@ -537,19 +605,19 @@ while running:
                     ):
 
                         selected_player = i
-
+                        click_sound.play(1, )
                 # ATTACK按钮
                 if selected_player is not None:
 
                     if 450 < mx < 600 and 600 < my < 650:
 
                         action_mode = "attack"
-
+                        click_sound.play(1, )
                     # HEAL按钮
                     if 650 < mx < 800 and 600 < my < 650:
-
+                        action_mode = "heal"
                         player_hp[selected_player] += 20
-
+                        click_healsound.play(1, )
                         if (
                             player_hp[selected_player]
                             > player_maxhp[selected_player]
@@ -559,11 +627,11 @@ while running:
                                 player_maxhp[selected_player]
                             )
 
-                        logs.append(
-                            f"{player_names[selected_player]} HEAL +20"
-                        )
-
-                        turn = "enemy"
+                        # logs.append(
+                        #     f"{player_names[selected_player]} HEAL +20"
+                        # )
+                        gameLog.addMessage(f"{player_names[selected_player]} HEAL +20")
+                        # turn = "enemy"
 
                 # 攻击敌人
                 if action_mode == "attack":
@@ -573,11 +641,12 @@ while running:
                         x, y = enemy_pos[i]
 
                         if (
-                            x < mx < x + 90
+                            x < mx < x + 90 
                             and y < my < y + 90
                             and enemy_hp[i] > 0
                         ):
-
+                            gameLog.addMessage(f"{player_names[selected_player]} attacks {enemy_names[i]}!")
+                    
                             attacker = selected_player
                             target = i
 
@@ -589,8 +658,9 @@ while running:
 
                             action_mode = None
                             turn = "enemy"
-
+                            click_sound.play(1, )   
     pygame.display.update()
-    clock.tick(60)
+    clock.tick(300)
+    # print(clock.get_fps())
 
 pygame.quit()
