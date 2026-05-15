@@ -544,7 +544,7 @@ while running:
 
             if move(player_pos[p], tx, ty):
 
-                dmg = damage(player_atk[p]) + 100
+                dmg = damage(player_atk[p]) + 1
 
                 # enemy_hp[e] -=
                 enemy_hp[e] -= dmg + player_rank[p] * 2
